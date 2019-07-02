@@ -1,0 +1,25 @@
+{
+  "name": "shoppingfeed/signal",
+  "description": "Unix signal handler that allow registering multiples callback on the same signal",
+  "keywords": ["unix", "posix", "signal", "pcntl", "handler"],
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=7.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "ShoppingFeed\\Signal\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "files": [
+      "tests/unit/HandlerTestCase.php"
+    ]
+  },
+  "require-dev": {
+    "ext-pcntl": "*",
+    "phpunit/phpunit": "7.*",
+    "zendframework/zend-servicemanager": "^3.0"
+  }
+}
