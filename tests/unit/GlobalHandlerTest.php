@@ -46,6 +46,12 @@ class GlobalHandlerTest extends TestCase
         $this->assertSame($signal, $this->instance->signal(SIGUSR1), 'signals are built only once');
     }
 
+    public function testBuildMultiSignalHandler()
+    {
+        $handler = $this->instance->signals([SIGINT, SIGUSR1]);
+        $this->assertInstanceOf(MultiSignalHandler::class, $handler);
+    }
+
     public function tearDown()
     {
         $this->instance->clear();

@@ -129,6 +129,33 @@ while ($wait--) {
 }
 ```
 
+# Multi Handler
+
+The `ShoppingFeed\Signal\MultiSignalhandler` object allow to manage callbacks on mutiples signals at once, and ensure the `ShoppingFeed\Signal\SignalhandlerInterface`.
+
+```php
+<?php
+namespace ShoppingFeed\Signal;
+
+// Signal must be indexed by their signal number when 
+// programmatically invoked throught the handle() method
+$handler = new MultiSignalHandler([
+    SIGINT  => new SignalHandler(SIGINT),
+    SIGTERM => new SignalHandler(SIGTERM),
+]);
+$handler->append(function(int $signal) {
+    echo $signal . ' handled' . PHP_EOL;
+});
+
+// Simulates signals manually
+$handler->handle(SIGINT); 
+$handler->handle(SIGTERM); 
+
+// Remove handlers for all signals... 
+$handler->clear();
+```
+
+
 # Group Handler
 
 The `ShoppingFeed\Signal\GroupHandler` object sits on the top of the signal handler, and allow to register and manage callbacks

@@ -70,6 +70,21 @@ class GlobalHandler
         return $this->signals[$signal];
     }
 
+    public function signals($signals, int $mode = null): SignalHandlerInterface
+    {
+        $handlers = [];
+        foreach ((array) $signals as $signal) {
+            if (! isset($this->signals[$signal])) {
+                $handlers[$signal]      = SignalHandler::factory($signal, $mode ?? $this->mode);
+                $this->signals[$signal] = $handlers[$signal];
+            } else {
+                $handlers[$signal] = $this->signals[$signal];
+            }
+        }
+
+        return new MultiSignalHandler($handlers);
+    }
+
     /**
      * Clear all managed instances, uninstall handlers
      * and remove internal references if no specific signals are provided
