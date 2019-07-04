@@ -17,5 +17,5 @@ install:
   - composer install
 
 script:
-  - vendor/bin/phpunit --coverage-clover=build/clover.xml
+  - vendor/bin/phpunit --coverage-clover=build/clover.xml --log-junit=build/junit.xml
   - sonar-scanner
