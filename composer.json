@@ -20,6 +20,8 @@
   "require-dev": {
     "ext-pcntl": "*",
     "phpunit/phpunit": "7.*",
-    "zendframework/zend-servicemanager": "^3.0"
+    "zendframework/zend-servicemanager": "^3.0",
+    "shoppingfeed/coding-style-php": "^2.0",
+    "overtrue/phplint": "^1.1"
   }
 }
