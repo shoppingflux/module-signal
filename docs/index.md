@@ -2,7 +2,7 @@
 
 Object oriented library over the pcntl PHP extension
 
-# Installation
+## Installation
 
 The library does not require the presence of `ext-pcntl`, but does not handle any signal when not installed
 
@@ -10,13 +10,13 @@ The library does not require the presence of `ext-pcntl`, but does not handle an
 composer require shoppingfeed/signal
 ```
 
-# Features
+## Features
 
 - Allow to register multiples callback on a single signal
 - Allow to register one callback on multiples signals
 - Allow manage previous handlers
 
-# Signal Handler
+## Signal Handler
 
 The base object of the library is `ShoppingFeed\Signal\SignalHandler`
 
@@ -129,7 +129,7 @@ while ($wait--) {
 }
 ```
 
-# Multi Handler
+## Multi Handler
 
 The `ShoppingFeed\Signal\MultiSignalhandler` object allow to manage callbacks on mutiples signals at once, and ensure the `ShoppingFeed\Signal\SignalhandlerInterface`.
 
@@ -156,7 +156,7 @@ $handler->clear();
 ```
 
 
-# Group Handler
+## Group Handler
 
 The `ShoppingFeed\Signal\GroupHandler` object sits on the top of the signal handler, and allow to register and manage callbacks
 against a list of signals.
@@ -182,7 +182,7 @@ $handler->clear([SIGINT, SIGTERM]);
 $handler->clear();
 ```
 
-# Global Handler
+## Global Handler
 
 The global handler is an object that allow to manage all signals and groups from a single place.
 If your application make uses of container oriented approach, the `ShoppingFeed\Signal\GlobalHandler` is a
@@ -218,7 +218,7 @@ $handler->clearSignal([SIGTERM]);
 $handler->clear();
 ```
 
-# Services
+## Services
 
 The instance of `ShoppingFeed\Signal\GlobalHandler` is provided as service thought dependencies configuration.
 Within apps, you can access it as following
