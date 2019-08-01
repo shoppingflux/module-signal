@@ -109,12 +109,12 @@ class GroupHandler
      */
     public function clear($signals = []): self
     {
-       foreach ($this->getSignals($signals) as $signal => $handler) {
-           $handler->clear($this->name);
-           if ($handler->isEmpty()) {
-               unset($this->signals[$signal]);
-           }
-       }
+        foreach ($this->getSignals($signals) as $signal => $handler) {
+            $handler->clear($this->name);
+            if ($handler->isEmpty()) {
+                unset($this->signals[$signal]);
+            }
+        }
 
         return $this;
     }

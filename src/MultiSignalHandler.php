@@ -54,7 +54,7 @@ class MultiSignalHandler implements SignalHandlerInterface
         $signals = $this->signals;
 
         return count($signals) === count(array_filter($signals, function (SignalHandlerInterface $handler) {
-                return $handler->isEmpty();
-            }));
+            return $handler->isEmpty();
+        }));
     }
 }
