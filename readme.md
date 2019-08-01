@@ -1,6 +1,6 @@
 # shoppingfeed/signal
 
-Component that allows to register and access multiples applications from configuration.
+Unix signal handler that allow registering multiples callback on the same signal
 
 ### Installation
 
