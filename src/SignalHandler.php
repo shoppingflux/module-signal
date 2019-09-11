@@ -119,7 +119,7 @@ class SignalHandler implements SignalHandlerInterface
         if ($this->flags & self::PREV_RESTORE) {
             pcntl_signal($this->signal, $this->previous);
         }
-        if (($this->flags & self::PREV_DISPATCH) && function_exists('posix_kill')) {
+        if (($this->flags & self::PREV_RECALL) && function_exists('posix_kill')) {
             posix_kill(posix_getpid(), $signal);
         }
     }

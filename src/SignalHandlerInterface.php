@@ -21,7 +21,7 @@ interface SignalHandlerInterface
     /**
      * Re-dispatch the signal to the prev handler once it has been treated by the handler.
      */
-    public const PREV_DISPATCH = 4;
+    public const PREV_RECALL = 4;
 
     /**
      * Method invoked by the pcntl_signal handler, which receive parameters described here
