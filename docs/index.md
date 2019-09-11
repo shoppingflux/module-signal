@@ -95,6 +95,7 @@ Optionally, the SignalHandler constructor accepts the following constants that d
 
 - SignalHandlerInterface::PREV_REPLACE : The default behavior. any previous installed handler will be overwritten 
 - SignalHandlerInterface::PREV_RESTORE : Any previous installed handler will be re-installed once the SignalHandler callbacks stack becomes empty 
+- SignalHandlerInterface::PREV_RECALL  : If previous installed handler, in conjunction with SignalHandlerInterface::PREV_RESTORE, the previous handler will be called once the it has been restored. This flag require the `posix` extension to be installed.
 - SignalHandlerInterface::PREV_ERROR   : If previous installed handler, then the SignalHandler will throw a `ShoppingFeed\Signal\Exception\RuntimeException` exception when the first callback is registered
 
 Example with `PREV_ERROR` :

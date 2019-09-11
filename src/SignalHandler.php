@@ -42,6 +42,7 @@ class SignalHandler implements SignalHandlerInterface
         $this->flags       = $flags;
         $this->signal      = $signal;
         $this->subscribers = new \SplDoublyLinkedList();
+        $this->previous    = pcntl_signal_get_handler($signal);
     }
 
     public function append(callable $callback, array $options = []): SignalHandlerInterface
@@ -109,30 +110,26 @@ class SignalHandler implements SignalHandlerInterface
         }
 
         if ($this->isEmpty()) {
-            $this->restore();
+            $this->restore($signal);
         }
     }
 
-    private function restore(): void
+    private function restore(int $signal = null): void
     {
-        if (null !== $this->previous) {
+        if ($this->flags & self::PREV_RESTORE) {
             pcntl_signal($this->signal, $this->previous);
-            $this->previous = null;
+        }
+        if (($this->flags & self::PREV_DISPATCH) && function_exists('posix_kill')) {
+            posix_kill(posix_getpid(), $signal);
         }
     }
 
     private function install(): void
     {
-        $previous = pcntl_signal_get_handler($this->signal);
-
-        if ($previous && self::PREV_ERROR === $this->flags) {
+        if ($this->previous && self::PREV_ERROR === $this->flags) {
             throw new Exception\RuntimeException(
                 sprintf('An handler is already installed for signal %d, aborting.', $this->signal)
             );
-        }
-
-        if ($previous && self::PREV_RESTORE === $this->flags) {
-            $this->previous = $previous;
         }
 
         pcntl_signal($this->signal, [$this, 'handle']);
