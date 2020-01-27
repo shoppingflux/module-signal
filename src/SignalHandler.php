@@ -103,10 +103,11 @@ class SignalHandler implements SignalHandlerInterface
     public function handle(int $signal, $info = null): void
     {
         foreach ($this->subscribers as $key => $subscriber) {
-            ($subscriber->handler)($signal, $info);
+            // detach the signal first, as in some concurrency cases, the $key can already be removed
             if (true === $subscriber->once) {
                 unset($this->subscribers[$key]);
             }
+            ($subscriber->handler)($signal, $info);
         }
 
         if ($this->isEmpty()) {
