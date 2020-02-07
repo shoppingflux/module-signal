@@ -1,7 +1,7 @@
 <?php
 namespace ShoppingFeed\Signal;
 
-use Zend\ServiceManager;
+use Laminas\ServiceManager;
 
 return [
     'dependencies' => [
