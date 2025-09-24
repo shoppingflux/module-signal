@@ -1,26 +1,22 @@
 <?php
+
 namespace ShoppingFeed\Signal;
+
+use ArrayObject;
 
 class GlobalHandler
 {
-    /**
-     * @var SignalHandler[]
-     */
+    /** @var SignalHandler[] */
     private $signals;
 
-    /**
-     * @var GroupHandler[]
-     */
+    /** @var GroupHandler[] */
     private $groups;
 
-    /**
-     * @var int
-     */
-    private $mode;
+    private int $mode;
 
     public function __construct(int $mode = SignalHandlerInterface::PREV_REPLACE)
     {
-        $this->signals = new \ArrayObject();
+        $this->signals = new ArrayObject();
         $this->groups  = [];
         $this->mode    = $mode;
     }
@@ -28,12 +24,10 @@ class GlobalHandler
     /**
      * Multiton entry point, that allow to segregate handlers management per channel
      *
-     * @param string $name
-     * @param int    $mode
      *
      * @return GroupHandler
      */
-    public function group(string $name = '', int $mode = null): GroupHandler
+    public function group(string $name = '', ?int $mode = null): GroupHandler
     {
         if (! isset($this->groups[$name])) {
             $this->groups[$name] = GroupHandler::withSignals($name, $this->signals, $mode ?? $this->mode);
@@ -61,7 +55,7 @@ class GlobalHandler
         return $this;
     }
 
-    public function signal(int $signal, int $mode = null): SignalHandlerInterface
+    public function signal(int $signal, ?int $mode = null): SignalHandlerInterface
     {
         if (! isset($this->signals[$signal])) {
             $this->signals[$signal] = SignalHandler::factory($signal, $mode ?? $this->mode);
@@ -70,9 +64,10 @@ class GlobalHandler
         return $this->signals[$signal];
     }
 
-    public function signals($signals, int $mode = null): SignalHandlerInterface
+    public function signals($signals, ?int $mode = null): SignalHandlerInterface
     {
         $handlers = [];
+
         foreach ((array) $signals as $signal) {
             if (! isset($this->signals[$signal])) {
                 $handlers[$signal]      = SignalHandler::factory($signal, $mode ?? $this->mode);

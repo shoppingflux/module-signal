@@ -1,33 +1,26 @@
 <?php
+
 namespace ShoppingFeed\Signal;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class MultiSignalHandlerTest extends TestCase
 {
-    /**
-     * @var MultiSignalHandler
-     */
-    private $instance;
+    private MultiSignalHandler $instance;
 
-    /**
-     * @var SignalHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $signal1;
+    private SignalHandlerInterface|MockObject $signal1;
 
-    /**
-     * @var SignalHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $signal2;
+    private SignalHandlerInterface|MockObject $signal2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->signal1  = $this->createMock(SignalHandlerInterface::class);
         $this->signal2  = $this->createMock(SignalHandlerInterface::class);
         $this->instance = new MultiSignalHandler([1 => $this->signal1, 2 => $this->signal2]);
     }
 
-    public function testHandleSignalForwardToSignalThatHandleSigno()
+    public function testHandleSignalForwardToSignalThatHandleSigno(): void
     {
         $this->signal2
             ->expects($this->once())
@@ -41,7 +34,7 @@ class MultiSignalHandlerTest extends TestCase
         $this->instance->handle(2, 'test');
     }
 
-    public function testHandleSignalForwardToNoSignal()
+    public function testHandleSignalForwardToNoSignal(): void
     {
         $this->signal1
             ->expects($this->never())
@@ -54,7 +47,7 @@ class MultiSignalHandlerTest extends TestCase
         $this->instance->handle(3, 'test');
     }
 
-    public function testAppendAddNewCallabackToAllSignals()
+    public function testAppendAddNewCallabackToAllSignals(): void
     {
         $callback = 'is_string';
         $options  = ['once' => 'true'];
@@ -72,7 +65,7 @@ class MultiSignalHandlerTest extends TestCase
         $this->instance->append($callback, $options);
     }
 
-    public function testPrependAddNewCallabackToAllSignals()
+    public function testPrependAddNewCallabackToAllSignals(): void
     {
         $callback = 'is_string';
         $options  = ['once' => 'true'];
@@ -90,7 +83,7 @@ class MultiSignalHandlerTest extends TestCase
         $this->instance->prepend($callback, $options);
     }
 
-    public function testClearIsInvokedOnAllSignals()
+    public function testClearIsInvokedOnAllSignals(): void
     {
         $groups = ['test'];
 
@@ -107,7 +100,7 @@ class MultiSignalHandlerTest extends TestCase
         $this->instance->clear($groups);
     }
 
-    public function testIsEmptyExpectsAllSignalAreEmpty()
+    public function testIsEmptyExpectsAllSignalAreEmpty(): void
     {
         $this->signal1
             ->expects($this->once())
@@ -122,7 +115,7 @@ class MultiSignalHandlerTest extends TestCase
         $this->assertTrue($this->instance->isEmpty());
     }
 
-    public function testIsNotEmptyWhenOneSignalIsEmpty()
+    public function testIsNotEmptyWhenOneSignalIsEmpty(): void
     {
         $this->signal1
             ->expects($this->once())
@@ -137,7 +130,7 @@ class MultiSignalHandlerTest extends TestCase
         $this->assertFalse($this->instance->isEmpty());
     }
 
-    public function testIsNotEmptyWhenAllSignalsAreNotEmpty()
+    public function testIsNotEmptyWhenAllSignalsAreNotEmpty(): void
     {
         $this->signal1
             ->expects($this->once())

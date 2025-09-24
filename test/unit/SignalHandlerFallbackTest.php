@@ -1,12 +1,10 @@
 <?php
+
 namespace ShoppingFeed\Signal;
 
 class SignalHandlerFallbackTest extends HandlerTestCase
 {
-    /**
-     * @var SignalHandlerFallback
-     */
-    private $instance;
+    private SignalHandlerFallback $instance;
 
     public function setUp(): void
     {

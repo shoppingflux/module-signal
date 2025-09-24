@@ -1,19 +1,17 @@
 <?php
+
 namespace ShoppingFeed\Signal;
 
 class GroupHandlerTest extends HandlerTestCase
 {
-    /**
-     * @var GroupHandler
-     */
-    private $instance;
+    private GroupHandler $instance;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new GroupHandler();
     }
 
-    public function testRegisterAgainstSingleSignal()
+    public function testRegisterAgainstSingleSignal(): void
     {
         $mock = $this->createMock(HandlerTestStub::class);
         $mock->expects($this->once())->method('__invoke');
@@ -22,7 +20,7 @@ class GroupHandlerTest extends HandlerTestCase
         $this->send(SIGUSR1);
     }
 
-    public function testMultiRegisterAgainstSingleSignal()
+    public function testMultiRegisterAgainstSingleSignal(): void
     {
         $mock1 = $this->createMock(HandlerTestStub::class);
         $mock1->expects($this->once())->method('__invoke');
@@ -36,19 +34,25 @@ class GroupHandlerTest extends HandlerTestCase
         $this->send(SIGUSR1);
     }
 
-    public function testMultiRegisterAgainstMultiplesSignals()
+    public function testMultiRegisterAgainstMultiplesSignals(): void
     {
         $mock1 = $this->createMock(HandlerTestStub::class);
         $mock1
             ->expects($this->exactly(2))
             ->method('__invoke')
-            ->withConsecutive([SIGUSR1], [SIGUSR2]);
+            ->willReturnMap([
+                [SIGUSR1, null],
+                [SIGUSR2, null],
+            ]);
 
         $mock2 = $this->createMock(HandlerTestStub::class);
         $mock2
             ->expects($this->exactly(2))
             ->method('__invoke')
-            ->withConsecutive([SIGUSR1], [SIGUSR2]);
+            ->willReturnMap([
+                [SIGUSR1, null],
+                [SIGUSR2, null],
+            ]);
 
         $this->instance->append([SIGUSR1, SIGUSR2], $mock1);
         $this->instance->append([SIGUSR1, SIGUSR2], $mock2);
@@ -57,13 +61,13 @@ class GroupHandlerTest extends HandlerTestCase
         $this->send(SIGUSR2);
     }
 
-    public function testPrependCallbackAfterAppendedOne()
+    public function testPrependCallbackAfterAppendedOne(): void
     {
         $tracker = [];
-        $this->instance->append(SIGUSR1, function() use (&$tracker) {
+        $this->instance->append(SIGUSR1, function () use (&$tracker) {
             $tracker[] = 2;
         });
-        $this->instance->prepend(SIGUSR1, function() use (&$tracker) {
+        $this->instance->prepend(SIGUSR1, function () use (&$tracker) {
             $tracker[] = 1;
         });
 
@@ -71,7 +75,7 @@ class GroupHandlerTest extends HandlerTestCase
 
         $this->assertSame(
             [1, 2],
-            $tracker
+            $tracker,
         );
     }
 
@@ -100,7 +104,7 @@ class GroupHandlerTest extends HandlerTestCase
         $this->instance->handle([SIGUSR1, SIGUSR2]);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->instance->clear();
     }

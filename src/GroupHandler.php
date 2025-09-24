@@ -1,39 +1,34 @@
 <?php
+
 namespace ShoppingFeed\Signal;
+
+use ArrayObject;
 
 class GroupHandler
 {
-    /**
-     * @var string The name associated to the current instance
-     */
-    private $name;
+    /* The name associated to the current instance */
+    private string $name;
 
     /**
      * The signal handler management mode
-     *
-     * @var int
      */
-    private $mode;
+    private int $mode;
 
-    /**
-     * @var SignalHandler[]|\ArrayObject
-     */
+    /** @var SignalHandler[]|\ArrayObject */
     private $signals;
 
     /**
-     * @param string                             $name
      * @param array|\ArrayObject|SignalHandler[] $signals
-     * @param int                                $mode
      *
      * @return GroupHandler
      */
     public static function withSignals(
         string $name = '',
         $signals = [],
-        int $mode = SignalHandlerInterface::PREV_REPLACE): self
-    {
-        if (! $signals instanceof \ArrayObject) {
-            $signals = new \ArrayObject($signals);
+        int $mode = SignalHandlerInterface::PREV_REPLACE,
+    ): self {
+        if (! $signals instanceof ArrayObject) {
+            $signals = new ArrayObject($signals);
         }
 
         $instance          = new self($name, $mode);
@@ -46,7 +41,7 @@ class GroupHandler
     {
         $this->name    = $name;
         $this->mode    = $mode;
-        $this->signals = new \ArrayObject();
+        $this->signals = new ArrayObject();
     }
 
     public function getName(): string
@@ -111,6 +106,7 @@ class GroupHandler
     {
         foreach ($this->getSignals($signals) as $signal => $handler) {
             $handler->clear($this->name);
+
             if ($handler->isEmpty()) {
                 unset($this->signals[$signal]);
             }

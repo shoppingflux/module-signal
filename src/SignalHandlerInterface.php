@@ -1,4 +1,5 @@
 <?php
+
 namespace ShoppingFeed\Signal;
 
 interface SignalHandlerInterface
@@ -27,7 +28,6 @@ interface SignalHandlerInterface
      * Method invoked by the pcntl_signal handler, which receive parameters described here
      * https://www.php.net/manual/fr/function.pcntl-signal.php
      *
-     * @param int  $signal
      * @param null $info
      */
     public function handle(int $signal, $info = null): void;

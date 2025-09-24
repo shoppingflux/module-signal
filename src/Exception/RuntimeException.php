@@ -1,6 +1,9 @@
 <?php
+
 namespace ShoppingFeed\Signal\Exception;
 
-class RuntimeException extends \RuntimeException implements ExceptionInterface
+use RuntimeException as NativeRuntimeException;
+
+class RuntimeException extends NativeRuntimeException implements ExceptionInterface
 {
 }

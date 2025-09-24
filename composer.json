@@ -5,7 +5,7 @@
   "type": "library",
   "license": "MIT",
   "require": {
-    "php": ">=7.1"
+    "php": ">=8.2"
   },
   "autoload": {
     "psr-4": {
@@ -14,14 +14,43 @@
   },
   "autoload-dev": {
     "files": [
-      "tests/unit/HandlerTestCase.php"
-    ]
+      "test/unit/HandlerTestCase.php"
+    ],
+    "psr-4": {
+      "ShoppingFeed\\Signal\\": "test/unit/"
+    }
   },
   "require-dev": {
     "ext-pcntl": "*",
-    "phpunit/phpunit": "7.*",
+    "phpunit/phpunit": "^10.0",
     "laminas/laminas-servicemanager": "^3.0",
     "shoppingfeed/coding-style-php": "^2.0",
-    "overtrue/phplint": "^1.1"
+    "overtrue/phplint": "^1.1",
+    "phpstan/phpstan": "^2.1"
+  },
+  "repositories": {
+  "packagist.org": false,
+  "private-packagist": {
+    "type": "composer",
+    "url": "https://repo.packagist.com/shoppingfeed/"
+  }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "scripts": {
+    "phpunit": "vendor/bin/phpunit",
+    "phpcs": "vendor/bin/sfcs --progress -vvv -- src test/unit",
+    "phpcsfix": "vendor/bin/sfcs --progress -vvv --autofix -- src test/unit",
+    "phplint": "vendor/bin/phplint src --cache=build/phplint.cache",
+    "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G",
+    "test": [
+      "@phplint",
+      "@phpunit",
+      "@phpstan",
+      "@phpcs"
+    ]
   }
 }

@@ -1,0 +1,35 @@
+name: Unit tests & static analysis
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php_version: [ "8.2", "8.3", "8.4" ]
+    container:
+      image: ghcr.io/shoppingflux/php:${{ matrix.php_version }}-unit
+      env:
+        COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+      credentials:
+        username: ${{ secrets.CR_USER }}
+        password: ${{ secrets.CR_PAT }}
+    steps:
+      - name: Composer install
+        uses: shoppingflux/github-actions/composer-install@main
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install dependencies
+        run: composer install --no-progress
+        env:
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+
+      - name: Run test script
+        run: composer test

@@ -1,20 +1,24 @@
 <?php
+
 namespace ShoppingFeed\Signal;
+
+use SplDoublyLinkedList;
+use stdClass;
+
+use function function_exists;
 
 class SignalHandler implements SignalHandlerInterface
 {
     public static function factory(int $signal, int $flags = self::PREV_REPLACE): SignalHandlerInterface
     {
-        if (\function_exists('pcntl_signal')) {
+        if (function_exists('pcntl_signal')) {
             return new self($signal, $flags);
         }
 
         return new SignalHandlerFallback();
     }
 
-    /**
-     * @var callable[][]
-     */
+    /** @var callable[][] */
     private $subscribers;
 
     /**
@@ -24,15 +28,9 @@ class SignalHandler implements SignalHandlerInterface
      */
     private $previous;
 
-    /**
-     * @var int
-     */
-    private $flags;
+    private int $flags;
 
-    /**
-     * @var int
-     */
-    private $signal;
+    private int $signal;
 
     public function __construct(int $signal, int $flags = self::PREV_REPLACE)
     {
@@ -41,7 +39,7 @@ class SignalHandler implements SignalHandlerInterface
 
         $this->flags       = $flags;
         $this->signal      = $signal;
-        $this->subscribers = new \SplDoublyLinkedList();
+        $this->subscribers = new SplDoublyLinkedList();
         $this->previous    = pcntl_signal_get_handler($signal);
     }
 
@@ -52,7 +50,7 @@ class SignalHandler implements SignalHandlerInterface
         }
 
         $this->subscribers->push(
-            $this->createSubscriber($callback, $options)
+            $this->createSubscriber($callback, $options),
         );
 
         return $this;
@@ -65,7 +63,7 @@ class SignalHandler implements SignalHandlerInterface
         }
 
         $this->subscribers->unshift(
-            $this->createSubscriber($callback, $options)
+            $this->createSubscriber($callback, $options),
         );
 
         return $this;
@@ -84,6 +82,7 @@ class SignalHandler implements SignalHandlerInterface
 
         // Remove elements from bottom to top, as the list is re-indexed every time an element is removed
         sort($indexes);
+
         while (null !== ($index = array_pop($indexes))) {
             unset($this->subscribers[$index]);
         }
@@ -107,6 +106,7 @@ class SignalHandler implements SignalHandlerInterface
             if (true === $subscriber->once) {
                 unset($this->subscribers[$key]);
             }
+
             ($subscriber->handler)($signal, $info);
         }
 
@@ -115,11 +115,12 @@ class SignalHandler implements SignalHandlerInterface
         }
     }
 
-    private function restore(int $signal = null): void
+    private function restore(?int $signal = null): void
     {
         if ($this->flags & self::PREV_RESTORE) {
             pcntl_signal($this->signal, $this->previous);
         }
+
         if (($this->flags & self::PREV_RECALL) && function_exists('posix_kill')) {
             posix_kill(posix_getpid(), $signal);
         }
@@ -129,14 +130,14 @@ class SignalHandler implements SignalHandlerInterface
     {
         if ($this->previous && self::PREV_ERROR === $this->flags) {
             throw new Exception\RuntimeException(
-                sprintf('An handler is already installed for signal %d, aborting.', $this->signal)
+                sprintf('An handler is already installed for signal %d, aborting.', $this->signal),
             );
         }
 
         pcntl_signal($this->signal, [$this, 'handle']);
     }
 
-    private function createSubscriber(callable $callback, array $options): \stdClass
+    private function createSubscriber(callable $callback, array $options): stdClass
     {
         $options = array_replace(['group' => '', 'once' => false], $options);
 

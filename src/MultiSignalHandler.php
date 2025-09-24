@@ -1,11 +1,10 @@
 <?php
+
 namespace ShoppingFeed\Signal;
 
 class MultiSignalHandler implements SignalHandlerInterface
 {
-    /**
-     * @var SignalHandlerInterface[]
-     */
+    /** @var SignalHandlerInterface[] */
     private $signals;
 
     public function __construct(iterable $signals)

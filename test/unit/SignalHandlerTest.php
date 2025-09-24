@@ -1,14 +1,12 @@
 <?php
+
 namespace ShoppingFeed\Signal;
 
 class SignalHandlerTest extends HandlerTestCase
 {
-    /**
-     * @var SignalHandler
-     */
-    private $instance;
+    private SignalHandler $instance;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instance = new SignalHandler(SIGUSR1);
     }
@@ -139,7 +137,7 @@ class SignalHandlerTest extends HandlerTestCase
         $this->assertInstanceOf(SignalHandler::class, $instance);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->instance->clear();
     }

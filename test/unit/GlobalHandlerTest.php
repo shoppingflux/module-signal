@@ -1,28 +1,23 @@
 <?php
+
 namespace ShoppingFeed\Signal;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class GlobalHandlerTest extends TestCase
 {
-    /**
-     * @var GlobalHandler
-     */
-    private $instance;
+    private GlobalHandler $instance;
 
-    /**
-     * @var GroupHandler|\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $group;
+    private GroupHandler|MockObject $group;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->group    = $this->createMock(GroupHandler::class);
         $this->instance = new GlobalHandler();
     }
 
-
-    public function testManageGroupHandler()
+    public function testManageGroupHandler(): void
     {
         $group = $this->instance->group('test');
         $this->assertInstanceOf(GroupHandler::class, $group);
@@ -31,13 +26,13 @@ class GlobalHandlerTest extends TestCase
         $this->assertSame($group, $this->instance->group('test'), 'groups are built only once');
     }
 
-    public function testManageSignalHandler()
+    public function testManageSignalHandler(): void
     {
         $signal = $this->instance->signal(SIGUSR1);
         $this->assertInstanceOf(SignalHandler::class, $signal);
 
         $visited = false;
-        $signal->append(function() use (&$visited) {
+        $signal->append(function () use (&$visited) {
             $visited = true;
         });
         $signal->handle(SIGUSR1);
@@ -46,13 +41,13 @@ class GlobalHandlerTest extends TestCase
         $this->assertSame($signal, $this->instance->signal(SIGUSR1), 'signals are built only once');
     }
 
-    public function testBuildMultiSignalHandler()
+    public function testBuildMultiSignalHandler(): void
     {
         $handler = $this->instance->signals([SIGINT, SIGUSR1]);
         $this->assertInstanceOf(MultiSignalHandler::class, $handler);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->instance->clear();
     }
