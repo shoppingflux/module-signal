@@ -16,20 +16,13 @@ jobs:
       image: ghcr.io/shoppingflux/php:${{ matrix.php_version }}-unit
       env:
         COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+        XDEBUG: off
       credentials:
         username: ${{ secrets.CR_USER }}
         password: ${{ secrets.CR_PAT }}
     steps:
       - name: Composer install
         uses: shoppingflux/github-actions/composer-install@main
-
-      - name: Validate composer.json and composer.lock
-        run: composer validate
-
-      - name: Install dependencies
-        run: composer install --no-progress
-        env:
-          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 
       - name: Run test script
         run: composer test
